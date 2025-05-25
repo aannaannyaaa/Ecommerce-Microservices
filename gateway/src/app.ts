@@ -9,12 +9,13 @@ import { ProductService } from "./services/product-service";
 
 import { userTypeDefs } from "../src/schema/user-schema";
 import { orderTypeDefs } from "../src/schema/order-schema";
-import { productTypeDefs } from "./schema/product-schema.ts";
+import { productTypeDefs } from "../src/schema/product-schema";
 
 const root = {
   users: UserService.getAll,
   user: UserService.getById,
   createUser: UserService.createUser,
+  loginUser: UserService.loginUser,
   updateUserPreferences: UserService.updatePreferences,
 
   products: ProductService.getAll,

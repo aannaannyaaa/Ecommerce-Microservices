@@ -1,27 +1,53 @@
-import express from "express";
-import { createHandler } from "graphql-http/lib/use/express";
+import express from 'express';
+import { config } from "dotenv";
+import client from 'prom-client';
 
-import { UserService } from "./services/user-service";
-import { userTypeDefs } from "../src/schema/user-schema";
+import app from "./app";
 
-const root = {
-  users: UserService.getAll,
-  user: UserService.getById,
-  createUser: UserService.createUser,
-  updateUserPreferences: UserService.updatePreferences,
+config();
+const METRICS_PORT = process.env.METRICS_PORT;
+
+
+const register = new client.Registry();
+
+register.setDefaultLabels({
+  app: 'graphql-gateway'
+});
+
+client.collectDefaultMetrics({ register });
+
+const metricsApp = express();
+metricsApp.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
+
+import { consumer } from "./library/kafka";
+import { cacheClient } from "./library/redis";
+
+const PORT = parseInt(process.env.PORT || '4000', 10);
+
+const main = async () => {
+    await cacheClient.connect();
+    await consumer.connect();
+    await consumer.subscribe({ topic: "inventory-events" });
+    await consumer.run({
+        eachMessage: async ({ topic, partition }) => {
+            console.log(`[TOPIC]: [${topic}] | PART: ${partition}`);
+            await cacheClient.del("products/");
+        },
+    });
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Running a GraphQL API server at http://localhost:${PORT}/graphql`);
+    });
 };
 
-const app = express();
+main().catch(async (e) => {
+  console.error(e);
+  await consumer.disconnect();
+  process.exit(1);
+});
 
-app.all(
-  "/graphql",
-  createHandler({
-    schema: userTypeDefs,
-    rootValue: root,
-    context: (req: { headers: any; }) => ({
-      headers: req.headers,
-    }),
-  })
-);
-
-export default app;
+metricsApp.listen(METRICS_PORT, () => {
+  console.log(`📊 Metrics available at http://localhost:${METRICS_PORT}/metrics`);
+});
