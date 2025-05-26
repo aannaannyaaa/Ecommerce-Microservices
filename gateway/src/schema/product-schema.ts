@@ -1,18 +1,19 @@
 import { buildSchema } from "graphql";
 
 const productTypeDefs = buildSchema(`
-
   type Product {
     _id: ID!
     name: String!
-    price: Int!
+    price: Float!
     quantity: Int!
+    category: String!
   } 
 
   input CreateProductInput {
     name: String!
-    price: Int!
+    price: Float!
     quantity: Int!
+    category: String!
   }
 
   type Query {
