@@ -1,7 +1,10 @@
-import { axios } from "../library/http";
 import Axios from "axios";
-import { cacheClient } from "../library/redis";
+import { verify } from "jsonwebtoken";
+
 import { Context } from "../types";
+import { axios } from "../library/http";
+import { cacheClient } from "../library/redis";
+
 
 const client = Axios.create({
   ...axios.defaults,
@@ -35,7 +38,7 @@ const ProductService = {
   // Fetch a product by ID
   async getById({ id }: { id: string }) {
     try {
-      const response = await client.get(`/${id}`);
+      const response = await client.get(`/id/${id}`);
       return response.data.result;
     } catch (error) {
       console.error(`Error fetching product with ID ${id}:`, (error as any).message);
@@ -46,12 +49,19 @@ const ProductService = {
   // Create a new product
   async post({ input }: { input: any }, context: Context) {
     try {
-      const apiKey = context.headers["x-api-key"];
-      if (!apiKey || apiKey !== process.env["API_SECRET"]) {
-        throw new Error("Invalid API key");
-      }
+      const authorization = context.headers["authorization"];
+      if (!authorization) throw new Error("Authorization header is missing.");
 
-      const response = await client.post("/", input);
+      // Extract and verify the token
+      const token = authorization.split("Bearer ")[1];
+      if (!token) throw new Error("Invalid authorization token.");
+
+      const secret = process.env.API_SECRET;
+      if (!secret) throw new Error("API secret is missing.");
+      const payload = verify(token, secret) as unknown as { userId: string };
+      const userId = payload.userId;
+
+      const response = await client.post("/", input, { headers: { "x-user-id": userId } });
 
       // Check if 'data' exists in the response
       if (!response.data || !response.data.result) {
@@ -62,28 +72,6 @@ const ProductService = {
     } catch (error) {
       console.error("Error creating product:", (error as any));
       throw new Error((error as any).response?.data?.message || "Unable to create product.");
-    }
-  },
-
-  // Update a product by ID
-  async update({ id, input }: { id: string; input: any }) {
-    try {
-      const response = await client.put(`/${id}`, input);
-      return response.data.result;
-    } catch (error) {
-      console.error(`Error updating product with ID ${id}:`, (error as any).message);
-      throw new Error(`Unable to update product with ID: ${id}`);
-    }
-  },
-
-  // Delete a product by ID
-  async delete({ id }: { id: string }) {
-    try {
-      const response = await client.delete(`/${id}`);
-      return response.data.result;
-    } catch (error) {
-      console.error(`Error deleting product with ID ${id}:`, (error as any).message);
-      throw new Error(`Unable to delete product with ID: ${id}`);
     }
   },
 } as const;

@@ -1,5 +1,6 @@
-import { axios } from "../library/http";
 import Axios from "axios";
+
+import { axios } from "../library/http";
 
 const client = Axios.create({
   ...axios.defaults,
@@ -19,13 +20,16 @@ const UserService = {
   },
 
   // Fetch a user by ID
-  async getById({ id }: { id: string }) {
+  async getById({ _id }: { _id: string }) {
     try {
-      const response = await client.get(`/${id}`);
+      if (!_id) {
+        throw new Error('User ID is required');
+      }
+      const response = await client.get(`/${_id}`);
       return response.data.result;
     } catch (error) {
-      console.error(`Error fetching user with ID ${id}:`, (error as any).message);
-      throw new Error(`Unable to fetch user with ID: ${id}`);
+      console.error(`Error fetching user with ID ${_id}:`, (error as any).message);
+      throw new Error(`Unable to fetch user with ID: ${_id}`);
     }
   },
 
@@ -45,7 +49,26 @@ const UserService = {
     }
   },
 
-
+  // Login a user
+  async loginUser({ input }: { input: { email: string; password: string } }) {
+    try {
+      const response = await client.post("/login", input);
+  
+      // Check if 'data' exists in the response
+      if (!response.data?.result?.access_token || !response.data?.result?.user) {
+        throw new Error("Invalid login response");
+      }
+      
+      return response.data.result;
+    } catch (error) {
+      console.error("Error logging in:", error);
+      if (error instanceof Axios.AxiosError && error.response) {
+        throw new Error(error.response.data?.error || "Login failed");
+      } else {
+        throw new Error("Login failed");
+      }
+    }
+  },
 
   // Update user preferences
   async updatePreferences({ id, preferences }: { id: string; preferences: any }) {
@@ -55,17 +78,6 @@ const UserService = {
     } catch (error) {
       console.error(`Error updating preferences for user ID ${id}:`, (error as any).message);
       throw new Error("Unable to update preferences.");
-    }
-  },
-
-  // Delete a user
-  async delete({ id }: { id: string }) {
-    try {
-      const response = await client.delete(`/${id}`);
-      return response.data.result;
-    } catch (error) {
-      console.error(`Error deleting user with ID ${id}:`, (error as any).message);
-      throw new Error("Unable to delete user.");
     }
   },
 } as const;
