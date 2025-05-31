@@ -72,22 +72,31 @@ https://www.loom.com/share/14913d88f649421eb5426c14fea0d507
 
 ## Tech Stack
 
-### **Backend Services**
-- **Node.js** with **Express.js** : Service APIs
-- **GraphQL** : API Gateway for unified data querying
-- **Kafka** : Event Streaming for service communication
-- **Redis** : Key/Value caching 
-- **MongoDB** : NoSQL database for each service
-- **JWT Authentication** : Secure token-based access
-- **Nodemailer / SMTP** : Email notification service
+### Backend Services
+| Component | Technology |
+|------------|-------------|
+| Core APIs | Node.js (Express.js) |
+| API Gateway | GraphQL |
+| Event Stream | Apache Kafka |
+| Caching | Redis |
+| Database | MongoDB |
+| Email Delivery | Nodemailer |
 
-### **Infrastructure & DevOps**
-- **Docker & Docker Compose** : Containerization and orchestration
-- **Prometheus** : Metrics collection and monitoring
-- **Grafana** : Dashboard visualization and analytics
+### Infrastructure and DevOps
+| Component | Purpose |
+|------------|----------|
+| Docker & Docker Compose | Containerization and orchestration |
+| Prometheus | Metrics collection and system monitoring |
+| Grafana | Visualization and performance dashboards |
 
-## Running Locally
-The entire system can be run locally with a single command using Docker Compose.
+***
+
+## Local Deployment Instructions
+
+The system is fully containerized and can be deployed locally using Docker Compose.
+
+### Run All Services
+Execute the following command from the project root:
 ```bash
 docker-compose up --build
 ```
