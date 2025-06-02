@@ -56,10 +56,9 @@ https://www.loom.com/share/14913d88f649421eb5426c14fea0d507
 - Cron jobs for scheduled or bulk notifications to improve efficiency.
 - Event-driven triggers for sending notifications seamlessly.
 
-### **Recommendation Engine**
-- Efficient, rule-based recommendation engine using order history.
-- Personalized suggestions based on past user behavior.
-- Cached recommendations for faster response and reduced compute overhead.
+### Recommendation Engine
+Generates tailored product recommendations using historical order data and user activity patterns.  
+Implements Redis caching to minimize computation overhead and deliver instant responses.
 
 ### **Monitoring & Observability**
 - **Prometheus** for real-time metrics collection and monitoring.
