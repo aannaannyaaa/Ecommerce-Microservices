@@ -153,7 +153,7 @@ user-service/
 Ensure that all dependent services (e.g., MongoDB, Kafka, Redis) are up and running before starting the user service. Use the following commands to start the service:
 
 ```bash
-cp .env.example .env  # Create and update env 
+cp .env.example .env
 yarn install
 yarn start
 ```
