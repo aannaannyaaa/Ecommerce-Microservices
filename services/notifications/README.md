@@ -71,7 +71,7 @@ notifications-service/
 Ensure that all dependent services (e.g., MongoDB, Kafka, Redis, SMTP) are running before starting the notifications service. Use the following commands to start the service:
 
 ```bash
-cp .env.example .env
+cp .env.example .env  # Create and update env
 yarn install
 yarn start
 ```

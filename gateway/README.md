@@ -61,7 +61,7 @@ gateway/
 Before running the GraphQL Gateway, ensure that all dependent services (**User, Product, Order, Kafka, Redis**) are up and running. Then execute the following commands:
 
 ```bash
-cp en.example .env
+cp en.example .env  #Create and update env 
 yarn install
 yarn start
 ```

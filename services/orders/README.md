@@ -113,7 +113,7 @@ order-service/
 Ensure that all dependent services (e.g., MongoDB, Kafka, Redis) are up and running before starting the order service. Use the following commands to start the service:
 
 ```bash
-cp .env.example .env 
+cp .env.example .env  # Create and update env 
 yarn install
 yarn start
 ```
