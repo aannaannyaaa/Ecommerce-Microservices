@@ -1,30 +1,40 @@
 # Microservices Backend System
 
-This project is a **scalable, event-driven microservices-based backend** designed to support the complex operations of an e-commerce platform. It consists of multiple independent services, each with its own database, connected asynchronously through **Kafka** and exposing APIs via **GraphQL**. The system is built with a strong focus on **performance, reliability, and scalability**, featuring **Redis caching**, **JWT authentication**, **priority-based notification handling**, and **observability** through monitoring tools like **Prometheus and Grafana**. The containerized architecture ensures seamless deployment and management.
+This project presents a **scalable and event-driven microservices architecture** designed to support the core functionalities of an e-commerce platform. Each service operates independently with its own database and communicates asynchronously through **Apache Kafka**. A **GraphQL API Gateway** provides a unified interface for querying data across the system.  
 
-https://www.loom.com/share/14913d88f649421eb5426c14fea0d507
+The architecture is optimized for **high performance, flexibility, and reliability**, with integrated **Redis caching**, **JWT-based security**, **priority-driven notifications**, and comprehensive observability using **Prometheus** and **Grafana**. All services are fully **containerized** to ensure reproducible deployments and simplified management.
 
-## Postman Collection : [Postman Colletion Link](https://imf-gadget-8462.postman.co/workspace/New-Team-Workspace~8ecba258-1966-41b6-bc48-8960184a83f9/collection/34642197-59443f20-0e0e-4ded-9da4-b56eae0ca040?action=share&creator=34642197)
+***
 
+## Core Components
 
+- **Microservices Architecture**  
+  Independent services including User, Product, Order, Notification, and Recommendation, each responsible for a distinct domain and backed by its own MongoDB database.
 
-## Architecture
+- **GraphQL API Gateway**  
+  A unified endpoint providing efficient and flexible data access across all services with support for aggregation and optimized queries.
 
-![image](https://github.com/user-attachments/assets/ef19a193-48dc-4671-81e4-6059af439da3)
+- **Event-Driven Messaging**  
+  Services communicate asynchronously using Kafka for improved scalability, system decoupling, and real-time data propagation.
 
+- **Caching Layer**  
+  Redis is utilized to cache frequently accessed data, reduce query latency, and increase response speed under high traffic.
 
-- **Microservices**: Independent services for handling **User**, **Product**, **Order**, **Notification**, and **Recommendation** functionalities.
-- **GraphQL API**: A unified interface enabling efficient and flexible data querying across multiple services.
-- **Event-Driven Communication**: Kafka-based asynchronous messaging for real-time updates and service decoupling.
-- **Redis Caching**: Accelerates response times by caching frequently accessed resources and recommendations.
-- **Authentication & Security**: Secure access using **JWT-based authentication** and role-based authorization.
-- **Monitoring & Observability**: Integrated monitoring with **Prometheus** and **Grafana** for health checks and centralized logging.
-- **Containerized Deployment**: Services are containerized using **Docker Compose** for streamlined deployment and scaling.
+- **Authentication and Authorization**  
+  User authentication is secured using JWT tokens. Role-based access control ensures data protection and controlled access.
 
-## Features
+- **Monitoring and Observability**  
+  Prometheus collects operational metrics, while Grafana offers customizable dashboards for system analytics and performance tracking.
 
-### **User Management**
-- User registration and authentication with secure JWT-based access control.
+- **Containerized Deployment**  
+  All services are encapsulated within Docker containers, orchestrated through Docker Compose, facilitating ease of deployment and environment portability.
+
+***
+
+## Functional Modules
+
+### User Management
+Handles user registration, authentication, and profile operations using JWT-secured endpoints and encrypted storage.
 
 ### **Product Catalog**
 - Endpoints for creating, updating, and managing product details.
